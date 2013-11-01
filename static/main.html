@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>Crypto</title>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+
+      function setup() {
+
+        var charReg = /[a-zA-Z]/;
+
+        function wrapText(text,lineLength) {
+          for(var i=0;i<text.length;i++) {
+            if((i+1)%lineLength===0) {
+              if(text[i] !== ' ') {
+                var replacementChar = ' ';
+                if(text[i+1] && charReg.test(text[i+1])) {
+                  if(text[i-1] && charReg.test(text[i-1])) {
+                    //This char is in the middle of a word
+                    text = text.substring(0,i) + '-' + text.substring(i);
+                  } else {
+                    text = text.substring(0,i) + ' ' + text.substring(i);
+                  }
+                }
+              }
+            }
+            else if(i%lineLength===0) {
+              if(text[i] === ' ') {
+                text = text.substring(0,i) + text.substring(i+1);
+              }
+            }
+          }
+          return text;
+        }
+
+        $('#messageForm').submit(function() {
+            var messageText = $('#message').val();
+            messageText = messageText.toLowerCase();
+            messageText = wrapText(messageText,24);
+            $.post("/message",{'message': messageText},function(data) {
+              if(data.id) {
+                window.location.href = '/view?id='+data.id;
+              } else {
+                $('#header').html('Unable to encrypt');
+              }
+            });
+            return false;
+          });
+        }
+
+      $(document).ready(setup);
+    </script>
+  </head>
+  <body>
+    <div class='content'>
+    	<h1 id='header'>Crypto</h1>
+      		<form id='messageForm'>
+      			<input type='text' autofocus='true' id='message' placeholder='message' required='true' maxlength='1024' class='message'>
+            <br><input type='submit' class='submit' value='Encrypt'>
+          </form>
+    </div>
+  </body>
+</html>
