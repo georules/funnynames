@@ -1,6 +1,8 @@
 var settings = require('./settings')
 var express = require('express')
-var app = express().use(express.bodyParser())
+var app = express()
+  .use(express.json())
+  .use(express.urlencoded())
 
 function allow(itall) {
   itall.header("Access-Control-Allow-Origin","*")
