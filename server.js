@@ -1,4 +1,7 @@
 var settings = require('./settings')
+var port = settings.port || 8080;
+var env = settings.env || "dev";
+
 var express = require('express')
 var app = express()
   .use(express.json())
@@ -10,12 +13,12 @@ function allow(itall) {
 
 app.get('/', function(req,res) {
   allow(res)
-  res.send("hello!")
+  res.send("hello from " + env + "!")
 });
 
 app.use(express.favicon('favicon.ico'));
 //app.use(pageNotFound);
 
-app.listen(settings.port, function() {
-  console.log('Listening on port ' + settings.port)
+app.listen(port, function() {
+  console.log('Listening on port ' + port)
 })
