@@ -113,7 +113,6 @@ input.message {
 }
 
 input.submit {
-  float:right;
   color:#F0F6FF;
   font-weight: bold;
   margin-top: 5px;
